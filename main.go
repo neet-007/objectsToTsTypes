@@ -87,12 +87,12 @@ func convertStruct() {
 
 }
 
-func convertArray(arr *json.RawMessage) {
+func convertArray(arr *json.RawMessage) string {
 	var temp []*json.RawMessage
 	err := json.Unmarshal(*arr, &temp)
 	if err != nil {
 		fmt.Println("could not unmarshal json arr")
-		return
+		return ""
 	}
 
 	arrTypes := make([]string, len(temp))
@@ -102,10 +102,24 @@ func convertArray(arr *json.RawMessage) {
 		err = json.Unmarshal(*val, &tempVal)
 		if err != nil {
 			fmt.Printf("could not unmarshal json val %v\n", val)
-			return
+			return ""
 		}
 
-		arrTypes = append(arrTypes, Types[reflect.TypeOf(tempVal).String()])
+		valType := ""
+
+		if reflect.TypeOf(tempVal).String() == "[]interface {}" {
+			var tempValJson *json.RawMessage
+			err = json.Unmarshal(*val, &tempValJson)
+			if err != nil {
+				fmt.Printf("could not unmarshal json val %v\n", val)
+				return ""
+			}
+
+			valType = fmt.Sprintf("(%s)", convertArray(tempValJson))
+		} else {
+			valType = fmt.Sprintf("(%s)", Types[reflect.TypeOf(tempVal).String()])
+		}
+		arrTypes = append(arrTypes, valType)
 
 	}
 
@@ -113,6 +127,8 @@ func convertArray(arr *json.RawMessage) {
 
 	arrWithTypes := strings.Trim(fmt.Sprintf("%s []", strings.Join(arrTypes, " | ")), " | ")
 	fmt.Printf("\n\n%s\n\n", arrWithTypes)
+
+	return arrWithTypes
 }
 
 func formatTypes(types map[string]string) []byte {
