@@ -2,5 +2,7 @@
     "name":"placeholder",
     "age":20,
     "is_alive":true,
-    "balance":12.5
+    "balance":12.5,
+    "gender":"m",
+    "test_arr":["test", 1, "hi", true, 1.5]
 }
