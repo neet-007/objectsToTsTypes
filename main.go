@@ -39,7 +39,7 @@ func main() {
 		log.Fatal("could not read file")
 	}
 
-	unmarshaledJson := make(map[string]*json.RawMessage)
+	unmarshaledJson := make(map[string]interface{})
 	if err := json.Unmarshal(file, &unmarshaledJson); err != nil {
 		log.Fatal("couldn not unmarshal json")
 	}
@@ -54,73 +54,63 @@ func main() {
 	}
 }
 
-func convertTypes(unmarshaledJson map[string]*json.RawMessage) map[string]string {
+func convertTypes(unmarshaledJson map[string]interface{}) map[string]string {
 	fmt.Println("the json")
 	for key, val := range unmarshaledJson {
-		fmt.Printf("key: %s, val: %s\n", key, val)
+		fmt.Printf("key: %s, val: %v\n", key, val)
 	}
 	fmt.Println()
 
 	tsType := make(map[string]string)
 
 	for key, val := range unmarshaledJson {
-		var temp interface{}
-		err := json.Unmarshal(*val, &temp)
-		if err != nil {
-			fmt.Printf("Error unmarshaling key %s: %v\n", key, err)
-			continue
+		fmt.Printf("type of temp:%v -> %v\n", val, reflect.TypeOf(val).String())
+
+		if arr, ok := val.([]interface{}); ok {
+			tsType[key] = convertArray(arr)
+		} else if structMap, ok := val.(map[string]interface{}); ok {
+			tsType[key] = convertStruct(structMap)
+		} else {
+			tsType[key] = Types[reflect.TypeOf(val).String()]
 		}
-
-		fmt.Printf("type of temp:%v -> %v\n", temp, reflect.TypeOf(temp).String())
-
-		if reflect.TypeOf(temp).String() == "[]interface {}" {
-			convertArray(val)
-		}
-
-		tsType[key] = Types[reflect.TypeOf(temp).String()]
 	}
 
 	return tsType
 }
 
-func convertStruct() {
+func convertStruct(structMap map[string]interface{}) string {
+	keyVal := make(map[string]string)
 
-}
+	for key, val := range structMap {
+		fmt.Printf("Key: %v, Value: %v\n", key, val)
 
-func convertArray(arr *json.RawMessage) string {
-	var temp []*json.RawMessage
-	err := json.Unmarshal(*arr, &temp)
-	if err != nil {
-		fmt.Println("could not unmarshal json arr")
-		return ""
+		if nestedStructMap, ok := val.(map[string]interface{}); ok {
+			convertStruct(nestedStructMap)
+		} else {
+			keyVal[key] = Types[reflect.TypeOf(val).String()]
+		}
 	}
 
-	arrTypes := make([]string, len(temp))
+	returnString := "{\n"
+	for key, val := range keyVal {
+		returnString += fmt.Sprintf(" %s : %s\n", key, val)
+	}
+	returnString += "}"
+	return returnString
+}
 
-	for _, val := range temp {
-		var tempVal interface{}
-		err = json.Unmarshal(*val, &tempVal)
-		if err != nil {
-			fmt.Printf("could not unmarshal json val %v\n", val)
-			return ""
-		}
+func convertArray(arr []interface{}) string {
+	arrTypes := make([]string, 0)
 
+	for _, val := range arr {
 		valType := ""
 
-		if reflect.TypeOf(tempVal).String() == "[]interface {}" {
-			var tempValJson *json.RawMessage
-			err = json.Unmarshal(*val, &tempValJson)
-			if err != nil {
-				fmt.Printf("could not unmarshal json val %v\n", val)
-				return ""
-			}
-
-			valType = fmt.Sprintf("(%s)", convertArray(tempValJson))
+		if nestedArr, ok := val.([]interface{}); ok {
+			valType = fmt.Sprintf("(%s)", convertArray(nestedArr))
 		} else {
-			valType = fmt.Sprintf("(%s)", Types[reflect.TypeOf(tempVal).String()])
+			valType = fmt.Sprintf("(%s)", Types[reflect.TypeOf(val).String()])
 		}
 		arrTypes = append(arrTypes, valType)
-
 	}
 
 	arrTypes = removeDuplicates(arrTypes)

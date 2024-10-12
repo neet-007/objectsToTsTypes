@@ -4,7 +4,9 @@
     "is_alive":true,
     "balance":12.5,
     "gender":"m",
-    "test_arr":["test", 1, "hi", true, 1.5],
-    "test_str_array":["test", "hi", "you", "me"],
-    "test_arr_of_arr":[[["test"]], [[true]], [[1]], [[1.5]]]
+    "test_object":{
+        "a":1,
+        "b":true,
+        "c":"hi"
+    }
 }
