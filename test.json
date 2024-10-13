@@ -1,12 +1,3 @@
 {
-    "name":"placeholder",
-    "age":20,
-    "is_alive":true,
-    "balance":12.5,
-    "gender":"m",
-    "test_object":{
-        "a":1,
-        "b":true,
-        "c":"hi"
-    }
+    "test_arr_with_ojbect":[{"nested_obecjt":true}]
 }
