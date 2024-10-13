@@ -1,3 +1,27 @@
-{
-    "test_arr_with_ojbect":[{"nested_obecjt":true}]
-}
+{
+  "blog": {
+    "title": "Tech Blog",
+    "articles": [
+      {
+        "articleId": 1,
+        "title": "Understanding TypeScript",
+        "content": "TypeScript is a typed superset of JavaScript.",
+        "author": {
+          "name": "Chris",
+          "bio": "A software engineer with a passion for TypeScript."
+        },
+        "tags": ["TypeScript", "JavaScript", "Programming"]
+      },
+      {
+        "articleId": 2,
+        "title": "React Basics",
+        "content": "React is a JavaScript library for building user interfaces.",
+        "author": {
+          "name": "Emily",
+          "bio": "Frontend developer with a love for React."
+        },
+        "tags": ["React", "JavaScript", "UI"]
+      }
+    ]
+  }
+}

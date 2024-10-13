@@ -28,7 +28,6 @@ func ConvertArray(arr []interface{}) string {
 	arrTypes = helpers.RemoveDuplicates(arrTypes)
 
 	arrWithTypes := strings.Trim(fmt.Sprintf("%s []", strings.Join(arrTypes, " | ")), " | ")
-	fmt.Printf("\n\n%s\n\n", arrWithTypes)
 
 	return arrWithTypes
 }

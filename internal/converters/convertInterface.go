@@ -3,6 +3,7 @@ package converters
 import (
 	"fmt"
 	"reflect"
+	"sort"
 	"strings"
 
 	"github.com/neet-007/objectsToTsTypes/internal/typesmap"
@@ -21,11 +22,19 @@ func ConvertInterface(structMap map[string]interface{}, padding int) string {
 		}
 	}
 
+	keys := make([]string, 0, len(keyVal))
+	for key := range keyVal {
+		keys = append(keys, key)
+	}
+
+	sort.Strings(keys)
+
 	returnString := "{\n"
 	paddingStr := strings.Repeat(string(" "), padding)
 	bracePaddingStr := strings.Repeat(string(" "), padding-1)
 
-	for key, val := range keyVal {
+	for _, key := range keys {
+		val := keyVal[key]
 		returnString += fmt.Sprintf("%s%s : %s\n", paddingStr, key, val)
 	}
 
