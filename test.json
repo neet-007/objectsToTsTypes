@@ -1,27 +1,16 @@
 {
-  "blog": {
-    "title": "Tech Blog",
-    "articles": [
-      {
-        "articleId": 1,
-        "title": "Understanding TypeScript",
-        "content": "TypeScript is a typed superset of JavaScript.",
-        "author": {
-          "name": "Chris",
-          "bio": "A software engineer with a passion for TypeScript."
-        },
-        "tags": ["TypeScript", "JavaScript", "Programming"]
-      },
-      {
-        "articleId": 2,
-        "title": "React Basics",
-        "content": "React is a JavaScript library for building user interfaces.",
-        "author": {
-          "name": "Emily",
-          "bio": "Frontend developer with a love for React."
-        },
-        "tags": ["React", "JavaScript", "UI"]
-      }
-    ]
-  }
+  "products": [
+    {
+      "product_id": 1,
+      "name": "Laptop",
+      "price": 1200.50,
+      "features": ["16GB RAM", "512GB SSD", "Intel i7"]
+    },
+    {
+      "product_id": 2,
+      "name": "Smartphone",
+      "price": 799.99,
+      "features": []
+    }
+  ]
 }

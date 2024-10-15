@@ -9,14 +9,15 @@ import (
 	"github.com/neet-007/objectsToTsTypes/internal/typesmap"
 )
 
-func ConvertInterface(structMap map[string]interface{}, padding int) string {
+func ConvertInterface(structMap map[string]interface{}, padding int, parrnet string) string {
+	fmt.Printf("%s: %d\n", parrnet, padding)
 	keyVal := make(map[string]string)
 
 	for key, val := range structMap {
 		if nestedArr, ok := val.([]interface{}); ok {
-			keyVal[key] = ConvertArray(nestedArr)
+			keyVal[key] = ConvertArray(nestedArr, padding+1)
 		} else if nestedStructMap, ok := val.(map[string]interface{}); ok {
-			keyVal[key] = ConvertInterface(nestedStructMap, padding+1)
+			keyVal[key] = ConvertInterface(nestedStructMap, padding+1, key)
 		} else {
 			keyVal[key] = typesmap.TsTypes[reflect.TypeOf(val).String()]
 		}
@@ -30,8 +31,8 @@ func ConvertInterface(structMap map[string]interface{}, padding int) string {
 	sort.Strings(keys)
 
 	returnString := "{\n"
-	paddingStr := strings.Repeat(string(" "), padding)
-	bracePaddingStr := strings.Repeat(string(" "), padding-1)
+	paddingStr := strings.Repeat(string("\t"), padding)
+	bracePaddingStr := strings.Repeat(string("\t"), padding-1)
 
 	for _, key := range keys {
 		val := keyVal[key]
